@@ -5,11 +5,8 @@ describe('Telescope.browser - Basic Working Tests', () => {
     // Use a simple static page to avoid complexity
     cy.visit('cypress/fixtures/test-pages/page1.html')
 
-    // Wait for extension to load
-    cy.wait(1000)
-
-    // Verify extension is loaded by checking for shadow host
-    cy.get('#telescope-shadow-host').should('exist')
+    // Wait for extension to be fully loaded (handles CI environment)
+    cy.waitForExtension()
   })
 
   describe('Extension Loading', () => {

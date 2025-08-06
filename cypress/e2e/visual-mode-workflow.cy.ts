@@ -4,7 +4,8 @@ describe('Visual Mode Workflow', () => {
   beforeEach(() => {
     // Just visit one page - multiple tabs cause issues with modal state
     cy.visit('cypress/fixtures/test-pages/page1.html')
-    cy.wait(200)
+    // Wait for extension to be fully loaded (handles CI environment)
+    cy.waitForExtension()
   })
 
   afterEach(() => {

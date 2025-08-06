@@ -3,7 +3,8 @@ import '../support/visual-mode-commands'
 describe('Basic Visual Mode Tests', () => {
   beforeEach(() => {
     cy.visit('cypress/fixtures/test-pages/page1.html')
-    cy.wait(200)
+    // Wait for extension to be fully loaded (handles CI environment)
+    cy.waitForExtension()
   })
 
   afterEach(() => {
