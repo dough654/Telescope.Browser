@@ -7,12 +7,7 @@ export default defineConfig({
       // Configure Chrome to load the extension
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.name === 'chrome') {
-          // Use EXTENSION_PATH env var if set (for CI), otherwise use ./dist
-          const extensionPath = process.env.EXTENSION_PATH 
-            ? path.resolve(process.env.EXTENSION_PATH)
-            : path.resolve('./dist')
-          
-          console.log('Loading extension from path:', extensionPath)
+          const extensionPath = path.resolve('./dist')
           
           launchOptions.args.push(`--load-extension=${extensionPath}`)
           launchOptions.args.push(`--disable-extensions-except=${extensionPath}`)

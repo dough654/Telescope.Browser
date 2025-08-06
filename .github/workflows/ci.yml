@@ -53,22 +53,10 @@ jobs:
     - name: Install Chrome for E2E tests
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: stable
-        
-    - name: Prepare extension for E2E tests
-      run: |
-        # Copy extension to a path without dots to avoid Chrome issues
-        mkdir -p /tmp/telescope-extension
-        cp -r dist/* /tmp/telescope-extension/
-        echo "Extension copied to: /tmp/telescope-extension"
-        ls -la /tmp/telescope-extension/
+        chrome-version: '138'
         
     - name: Run E2E tests
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "Extension path: /tmp/telescope-extension"
-        # Run cypress directly without rebuilding since we already built
-        EXTENSION_PATH=/tmp/telescope-extension npx cypress run --browser chrome --config chromeWebSecurity=false
+      run: npm run test:e2e
       
     - name: Upload build artifacts
       if: success()
