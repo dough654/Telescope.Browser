@@ -1,7 +1,7 @@
 # Telescope.browser 🔭
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue)](https://chrome.google.com/webstore)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue)](https://chrome.google.com/webstore) (Pending Approval, coming soon)
 
 A powerful browser extension that provides lightning-fast fuzzy search for tabs with vim-style keyboard navigation. Inspired by Neovim's Telescope and Harpoon plugins.
 
@@ -40,7 +40,7 @@ A powerful browser extension that provides lightning-fast fuzzy search for tabs 
 
 2. **From Source** (Developers)
    ```bash
-   git clone https://github.com/dough654/telescope-browser.git
+   git clone https://github.com/dough654/Telescope.Browser.git
    cd telescope-browser
    npm install
    npm run build
@@ -97,7 +97,7 @@ A powerful browser extension that provides lightning-fast fuzzy search for tabs 
 
 ```bash
 # Clone the repository
-git clone https://github.com/dough654/telescope-browser.git
+git clone https://github.com/dough654/Telescope.Browser.git
 cd telescope-browser
 
 # Install dependencies
@@ -194,8 +194,8 @@ Telescope.browser respects your privacy:
 
 ## 🏆 Acknowledgments
 
-- **Telescope.nvim** - Inspiration for the modal interface and fuzzy search capabilities
-- **Harpoon** - Inspiration for quick tab bookmarking and navigation
+- [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) - Inspiration for the modal interface and fuzzy search capabilities
+- [Harpoon](https://github.com/ThePrimeagen/harpoon/tree/harpoon2) - Inspiration for quick tab bookmarking and navigation
 
 ## 📜 License
 
