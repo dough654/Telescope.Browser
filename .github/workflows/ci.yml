@@ -27,6 +27,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
+    - name: Install Cypress binary
+      run: npx cypress install
+      
     - name: Run TypeScript type checking
       run: npm run check
       
