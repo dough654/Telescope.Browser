@@ -12,6 +12,8 @@ export default defineConfig({
             ? path.resolve(process.env.EXTENSION_PATH)
             : path.resolve('./dist')
           
+          console.log('Loading extension from path:', extensionPath)
+          
           launchOptions.args.push(`--load-extension=${extensionPath}`)
           launchOptions.args.push(`--disable-extensions-except=${extensionPath}`)
           launchOptions.args.push('--disable-web-security')

@@ -67,7 +67,8 @@ jobs:
       run: |
         echo "Current directory: $(pwd)"
         echo "Extension path: /tmp/telescope-extension"
-        EXTENSION_PATH=/tmp/telescope-extension npm run test:e2e
+        # Run cypress directly without rebuilding since we already built
+        EXTENSION_PATH=/tmp/telescope-extension npx cypress run --browser chrome --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
