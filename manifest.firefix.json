@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Telescope.browser",
+  "version": "0.1",
+  "permissions": ["tabs", "storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "public/hello.html",
+    "default_icon": "public/logo.png"
+  },
+  "background": {
+    "scripts": ["service-workers/service-worker.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-scripts/content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["*.html", "*.css", "_favicon/*"],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["*"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "telescope-browser@example.org"
+    }
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxPBdYIJ4EtcEqHbW28vUKjISy28WPdPclsA2Y7qEm4dW9knZqQwgBi/NrcoyEZ0vqwKDOsX5SVLoUL8m5c/0S/uWTHW3HOP8FbxCj915JRSsR3lw9V1MR6KYYgPstAaphoILykxC1raqgF4TqlxPz5p0hAfmroj1ePjWNBK2Zvd2A3Id2lxVAb4uM6sM58oSYdbVyEQGSuRwEHW4DdC4ls07vmv4TWqftbGPAvOs/kgMbyiONl2IMwfmGjiry1gvvgNnzvpGE+8Y4/OvEWDILhJ6hl1AmVacfK3WRKrvmYzzyf9jg+O1pdg+wsHJyPiGcMipDo+LeOR6aoYeQNNYtQIDAQAB"
+}
