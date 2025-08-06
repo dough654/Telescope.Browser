@@ -39,6 +39,14 @@ jobs:
     - name: Run build
       run: npm run build
       
+    - name: Verify extension build
+      run: |
+        echo "Extension files:"
+        ls -la dist/
+        ls -la dist/content-scripts/
+        echo "Manifest contents:"
+        cat dist/manifest.json
+      
     - name: Run unit tests
       run: npm run test:unit
       
@@ -47,8 +55,19 @@ jobs:
       with:
         chrome-version: stable
         
+    - name: Prepare extension for E2E tests
+      run: |
+        # Copy extension to a path without dots to avoid Chrome issues
+        mkdir -p /tmp/telescope-extension
+        cp -r dist/* /tmp/telescope-extension/
+        echo "Extension copied to: /tmp/telescope-extension"
+        ls -la /tmp/telescope-extension/
+        
     - name: Run E2E tests
-      run: npm run test:e2e
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Extension path: /tmp/telescope-extension"
+        EXTENSION_PATH=/tmp/telescope-extension npm run test:e2e
       
     - name: Upload build artifacts
       if: success()
