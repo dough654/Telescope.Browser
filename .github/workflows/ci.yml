@@ -27,6 +27,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
+    - name: Install Cypress binary
+      run: npx cypress install
+      
     - name: Run TypeScript type checking
       run: npm run check
       
@@ -36,13 +39,21 @@ jobs:
     - name: Run build
       run: npm run build
       
+    - name: Verify extension build
+      run: |
+        echo "Extension files:"
+        ls -la dist/
+        ls -la dist/content-scripts/
+        echo "Manifest contents:"
+        cat dist/manifest.json
+      
     - name: Run unit tests
       run: npm run test:unit
       
     - name: Install Chrome for E2E tests
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: stable
+        chrome-version: '138'
         
     - name: Run E2E tests
       run: npm run test:e2e

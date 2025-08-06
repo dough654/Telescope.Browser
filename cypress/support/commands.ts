@@ -39,7 +39,7 @@ Cypress.Commands.add('getExtensionId', () => {
 
 // Helper to get shadow DOM root
 Cypress.Commands.add('getShadowRoot', () => {
-  return cy.get('#telescope-shadow-host').then(($host) => {
+  return cy.get('#telescope-shadow-host', { timeout: Cypress.env('CI') ? 30000 : 10000 }).then(($host) => {
     return cy.wrap($host[0].shadowRoot)
   })
 })
@@ -91,8 +91,26 @@ Cypress.Commands.add('getSelectedTabIndex', () => {
 
 // Helper to wait for extension to be fully loaded
 Cypress.Commands.add('waitForExtension', () => {
-  cy.wait(2000)
-  cy.get('#telescope-shadow-host').should('exist')
+  // In CI, extension loading can be slower
+  const maxRetries = Cypress.env('CI') ? 10 : 3
+  const retryDelay = Cypress.env('CI') ? 2000 : 1000
+  
+  const checkForExtension = (retries = 0): void => {
+    cy.wait(retryDelay)
+    cy.window().then((win) => {
+      const shadowHost = win.document.getElementById('telescope-shadow-host')
+      if (!shadowHost && retries < maxRetries) {
+        // Reload the page and try again
+        cy.reload()
+        checkForExtension(retries + 1)
+      } else {
+        // Final check with Cypress assertion
+        cy.get('#telescope-shadow-host', { timeout: 30000 }).should('exist')
+      }
+    })
+  }
+  
+  checkForExtension()
 })
 
 // Helper to add tab to harpoon

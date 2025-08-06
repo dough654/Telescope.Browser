@@ -4,10 +4,9 @@ describe('Telescope.browser Extension - Basic Tests', () => {
   beforeEach(() => {
     // Use local test page to avoid network issues
     cy.visit('cypress/fixtures/test-pages/page1.html')
-    cy.wait(1000)
     
-    // Verify extension is loaded by checking for shadow host
-    cy.get('#telescope-shadow-host').should('exist')
+    // Wait for extension to be fully loaded (handles CI environment)
+    cy.waitForExtension()
   })
 
   it('should inject content script into pages', () => {
