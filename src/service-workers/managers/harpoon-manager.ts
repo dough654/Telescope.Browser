@@ -626,14 +626,15 @@ export class HarpoonManager {
       highlightedUrl: tab.url,
       title: tab.title,
       highlightedTitle: tab.title,
-      faviconUrl: this.generateFaviconUrl(tab.url),
+      faviconUrl: tab.favIconUrl || this.generateFaviconUrl(tab.url),
       screenshotUrl,
       windowId: tab.windowId
     }
   }
 
   private generateFaviconUrl(url: string): string {
-    // Using Google favicon service
+    // Using Google favicon service as fallback
+    // This is used when Chrome doesn't provide a favIconUrl (e.g., for new tabs)
     const faviconUrl = new URL('https://www.google.com/s2/favicons')
     faviconUrl.searchParams.set('sz', '64')
     faviconUrl.searchParams.set('domain_url', url)
