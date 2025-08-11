@@ -63,12 +63,6 @@ Telescope.browser requests the following permissions and here's why:
 - **Usage**: Persist user data between browser sessions
 - **Limitation**: Only stores extension-related data
 
-#### `scripting`
-- **Purpose**: Inject the search modal into web pages
-- **Data Access**: Ability to add UI elements to web pages
-- **Usage**: Display the search interface when triggered
-- **Limitation**: Only injects extension UI, doesn't read page content
-
 #### `<all_urls>` (Host Permissions)
 - **Purpose**: Make the search modal available on all websites
 - **Data Access**: Permission to inject UI on any website
