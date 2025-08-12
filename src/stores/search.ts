@@ -3,11 +3,9 @@ import type { Tab } from '../types/shared.js'
 import { searchTabs } from '../services/search.js'
 import { tabsToDisplay } from './tabs.js'
 import { setSelectedTab } from './modal.js'
-import type { FuseResult } from 'fuse.js'
 
 // Core search state
 export const searchQuery = writable('')
-export const searchResults = writable<FuseResult<Tab>[]>([])
 
 // Derived stores
 export const hasSearchQuery = derived(searchQuery, ($query) => {
@@ -15,8 +13,8 @@ export const hasSearchQuery = derived(searchQuery, ($query) => {
 })
 
 export const filteredTabsFromSearch = derived(
-  [searchQuery, searchResults, tabsToDisplay],
-  ([$query, $results, $tabsToDisplay]) => {
+  [searchQuery, tabsToDisplay],
+  ([$query, $tabsToDisplay]) => {
     if (!$query.trim()) {
       // Return tabs with original titles and URLs when no search query
       return $tabsToDisplay.map((tab) => ({
@@ -26,7 +24,10 @@ export const filteredTabsFromSearch = derived(
       }))
     }
 
-    return $results
+    // Re-run search with current tabs whenever tabsToDisplay changes
+    const results = searchTabs($tabsToDisplay, $query)
+    
+    return results
       .sort((a, b) => (a.score || 0) - (b.score || 0))
       .map((result) => {
         const tab = result.item
@@ -81,29 +82,13 @@ function highlightMatches(text: string, indices: readonly [number, number][]): s
 // Actions
 export function updateSearchQuery(query: string) {
   searchQuery.set(query)
-
-  // Perform search if query is not empty
-  if (query.trim()) {
-    // We need to get the current tabs to search
-    let currentTabs: Tab[] = []
-    const unsubscribe = tabsToDisplay.subscribe((tabs) => {
-      currentTabs = tabs
-    })
-    unsubscribe()
-
-    const results = searchTabs(currentTabs, query)
-    searchResults.set(results)
-  } else {
-    searchResults.set([])
-  }
-
+  
   // Always select the first tab after search to ensure preview updates
   setSelectedTab(0)
 }
 
 export function clearSearch() {
   searchQuery.set('')
-  searchResults.set([])
   setSelectedTab(0)
 }
 

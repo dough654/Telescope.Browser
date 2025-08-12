@@ -1,7 +1,7 @@
 # Telescope.browser 🔭
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue)](https://chrome.google.com/webstore) (Pending Approval, coming soon)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue)](https://chromewebstore.google.com/detail/telescopebrowser/aejekihgmkhggomhdkgejfkbnkjhhkhf?authuser=0&hl=en) (Pending Approval, coming soon)
 
 A powerful browser extension that provides lightning-fast fuzzy search for tabs with vim-style keyboard navigation. Inspired by Neovim's Telescope and Harpoon plugins.
 
