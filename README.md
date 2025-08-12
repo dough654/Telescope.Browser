@@ -188,8 +188,8 @@ Telescope.browser respects your privacy:
 
 ## 🐛 Bug Reports & Feature Requests
 
-- **Bug Reports**: [GitHub Issues](https://github.com/dough654/telescope-browser/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/dough654/telescope-browser/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/dough654/Telescope.Browser/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/dough654/Telescope.Browser/discussions)
 - **Security Issues**: See [SECURITY.md](SECURITY.md)
 
 ## 🏆 Acknowledgments
@@ -210,5 +210,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <p align="center">
   <a href="#-quick-start">Get Started</a> •
   <a href="CONTRIBUTING.md">Contribute</a> •
-  <a href="https://github.com/dough654/telescope-browser/issues">Report Bug</a>
+  <a href="https://github.com/dough654/Telescope.Browser/issues">Report Bug</a>
 </p>
