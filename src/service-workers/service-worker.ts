@@ -110,9 +110,16 @@ class TelescopeServiceWorker {
     })
 
     // Handle extension installation
-    chrome.runtime.onInstalled.addListener(() => {
-      serviceWorkerLogger.info('Extension installed/updated')
-      this.initialize()
+    chrome.runtime.onInstalled.addListener(async (details) => {
+      serviceWorkerLogger.info('Extension installed/updated', details)
+      await this.initialize()
+
+      // Inject content scripts into existing tabs on first install
+      console.log('Extension installed, Checking reason:', details.reason)
+      if (details.reason === 'install') {
+        console.log('Reason was install, injecting content scripts into existing tabs')
+        await this.injectContentScriptIntoExistingTabs()
+      }
     })
 
     // Handle service worker suspend/resume
@@ -527,6 +534,53 @@ class TelescopeServiceWorker {
     })
   }
 
+  /**
+   * Inject content script into existing tabs on installation
+   */
+  private async injectContentScriptIntoExistingTabs(): Promise<void> {
+    try {
+      // Get all tabs across all windows
+      const tabs = await chrome.tabs.query({})
+
+      // Filter tabs that can have content scripts injected
+      const injectableTabs = tabs.filter(
+        (tab) =>
+          tab.url &&
+          tab.id &&
+          !tab.url.startsWith('chrome://') &&
+          !tab.url.startsWith('chrome-extension://') &&
+          !tab.url.startsWith('moz-extension://') &&
+          !tab.url.startsWith('edge://') &&
+          !tab.url.startsWith('about:') &&
+          !tab.url.startsWith('file://') // Usually restricted
+      )
+
+      serviceWorkerLogger.info(
+        `Injecting content script into ${injectableTabs.length} existing tabs`
+      )
+
+      // Inject content script into each tab
+      for (const tab of injectableTabs) {
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id! },
+            files: ['content-scripts/content.js']
+          })
+          serviceWorkerLogger.debug(`Injected content script into tab ${tab.id}: ${tab.title}`)
+        } catch (error) {
+          // Some tabs might not allow injection (e.g., chrome:// pages in disguise)
+          // Log but don't throw - we want to continue with other tabs
+          serviceWorkerLogger.debug(`Failed to inject into tab ${tab.id}: ${error}`)
+        }
+      }
+
+      serviceWorkerLogger.info('Finished injecting content scripts into existing tabs')
+    } catch (error) {
+      serviceWorkerLogger.error('Failed to inject content scripts into existing tabs:', error)
+      // Don't throw - extension should still work for new tabs
+    }
+  }
+
   private async closeChromeTab(tabId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       chrome.tabs.remove(tabId, () => {
@@ -550,4 +604,3 @@ telescopeServiceWorker.initialize().catch((error) => {
 
 // Export for testing
 export { telescopeServiceWorker }
-

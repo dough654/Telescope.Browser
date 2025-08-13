@@ -1,6 +1,6 @@
 {
   "name": "telescope-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "tsc --noEmit && node ./esbuild.js",
     "postbuild": "cp -r src/public dist/ && cp manifest.json dist/",

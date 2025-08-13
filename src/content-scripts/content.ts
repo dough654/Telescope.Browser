@@ -19,7 +19,7 @@ hideLoading()
 let modalApp: Modal
 let extensionNavigating = false // Flag to track extension-initiated navigation
 
-document.addEventListener('DOMContentLoaded', function () {
+function initializeTelescopeExtension() {
   // Create shadow DOM container
   const shadowHost = document.createElement('div')
   shadowHost.id = 'telescope-shadow-host'
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Ignore errors - service worker might not be ready
       })
   })
-})
+}
 
 // Listen for messages from service worker
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -185,6 +185,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Return true to indicate we will send a response asynchronously
   return true
 })
+
+// Initialize the extension - if DOM is already loaded, run immediately
+// Otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeTelescopeExtension)
+} else {
+  // DOM is already loaded, initialize immediately
+  initializeTelescopeExtension()
+}
 
 // Setup keyboard event handling
 setupKeyboardHandler()
