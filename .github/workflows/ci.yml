@@ -50,15 +50,18 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Install Chromium
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-browser
+    - name: Setup Chrome for Testing
+      id: setup-chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable  # This installs Chrome for Testing
         
-    - name: Run E2E tests with Chromium
+    - name: Run E2E tests with Chrome for Testing
       run: |
-        echo "Using Chromium (supports extensions unlike Chrome 137+)"
-        npx cypress run --browser /usr/bin/chromium-browser --config chromeWebSecurity=false
+        echo "Chrome for Testing path: ${{ steps.setup-chrome.outputs.chrome-path }}"
+        echo "Chrome for Testing version: ${{ steps.setup-chrome.outputs.chrome-version }}"
+        echo "Using Chrome for Testing (supports extensions unlike regular Chrome 137+)"
+        npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
