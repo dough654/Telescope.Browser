@@ -50,21 +50,21 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Install Chromium for E2E tests
+    - name: Install xvfb for headed Chrome
       run: |
         sudo apt-get update
-        sudo apt-get install -y chromium-browser
+        sudo apt-get install -y xvfb
         
-    - name: Verify Chromium version
+    - name: Verify Chrome version
       run: |
-        echo "Chromium version:"
-        chromium-browser --version
-        which chromium-browser
+        echo "Chrome version:"
+        google-chrome --version || true
+        which google-chrome || true
         
-    - name: Run E2E tests
+    - name: Run E2E tests with headed Chrome in virtual display
       run: |
-        echo "Using Chromium for tests"
-        npx cypress run --browser chromium --config chromeWebSecurity=false
+        echo "Using Chrome in headed mode with xvfb (extensions don't work in headless)"
+        xvfb-run -a npx cypress run --browser chrome --headed --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
