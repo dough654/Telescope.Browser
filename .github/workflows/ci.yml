@@ -51,12 +51,27 @@ jobs:
       run: npm run test:unit
       
     - name: Install Chrome for E2E tests
+      id: setup-chrome
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: '138'
+        chrome-version: '138.0.6362'
+        
+    - name: Verify Chrome version
+      run: |
+        echo "Chrome binary path: ${{ steps.setup-chrome.outputs.chrome-path }}"
+        echo "Chrome version:"
+        "${{ steps.setup-chrome.outputs.chrome-path }}" --version || true
+        google-chrome --version || true
+        chromium --version || true
+        which google-chrome || true
+        which chromium || true
         
     - name: Run E2E tests
-      run: npm run test:e2e
+      env:
+        CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+      run: |
+        echo "Using Chrome at: $CHROME_PATH"
+        npx cypress run --browser "$CHROME_PATH" --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
