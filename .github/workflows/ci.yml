@@ -50,23 +50,18 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Install Chrome 138
-      run: |
-        # Download Chrome 138 deb package
-        wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_138.0.6362.217-1_amd64.deb
-        
-        # Install dependencies and Chrome
-        sudo apt-get update
-        sudo apt-get install -y ./google-chrome-stable_138.0.6362.217-1_amd64.deb
-        
-        # Verify installation
-        echo "Chrome version:"
-        google-chrome --version
+    - name: Setup Chrome 138
+      id: setup-chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: '138'
         
     - name: Run E2E tests with Chrome 138
       run: |
+        echo "Chrome 138 path: ${{ steps.setup-chrome.outputs.chrome-path }}"
+        echo "Chrome 138 version: ${{ steps.setup-chrome.outputs.chrome-version }}"
         echo "Using Chrome 138 (last version supporting --load-extension)"
-        npx cypress run --browser chrome --config chromeWebSecurity=false
+        npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
