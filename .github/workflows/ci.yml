@@ -50,23 +50,23 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Setup Chrome for Testing
-      id: setup-chrome
-      uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: stable  # This installs Chrome for Testing
-        
-    - name: Install xvfb for headed mode
+    - name: Install Chrome 138
       run: |
+        # Download Chrome 138 deb package
+        wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_138.0.6362.217-1_amd64.deb
+        
+        # Install dependencies and Chrome
         sudo apt-get update
-        sudo apt-get install -y xvfb
+        sudo apt-get install -y ./google-chrome-stable_138.0.6362.217-1_amd64.deb
         
-    - name: Run E2E tests with Chrome for Testing in headed mode
+        # Verify installation
+        echo "Chrome version:"
+        google-chrome --version
+        
+    - name: Run E2E tests with Chrome 138
       run: |
-        echo "Chrome for Testing path: ${{ steps.setup-chrome.outputs.chrome-path }}"
-        echo "Chrome for Testing version: ${{ steps.setup-chrome.outputs.chrome-version }}"
-        echo "Using Chrome for Testing in headed mode (extensions require headed mode)"
-        xvfb-run -a npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --headed --config chromeWebSecurity=false
+        echo "Using Chrome 138 (last version supporting --load-extension)"
+        npx cypress run --browser chrome --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
