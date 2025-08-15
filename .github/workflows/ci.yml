@@ -56,12 +56,17 @@ jobs:
       with:
         chrome-version: stable  # This installs Chrome for Testing
         
-    - name: Run E2E tests with Chrome for Testing
+    - name: Install xvfb for headed mode
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+        
+    - name: Run E2E tests with Chrome for Testing in headed mode
       run: |
         echo "Chrome for Testing path: ${{ steps.setup-chrome.outputs.chrome-path }}"
         echo "Chrome for Testing version: ${{ steps.setup-chrome.outputs.chrome-version }}"
-        echo "Using Chrome for Testing (supports extensions unlike regular Chrome 137+)"
-        npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --config chromeWebSecurity=false
+        echo "Using Chrome for Testing in headed mode (extensions require headed mode)"
+        xvfb-run -a npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --headed --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
