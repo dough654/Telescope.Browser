@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test:e2e": "npm run build && cypress run --browser chrome --config chromeWebSecurity=false",
-    "test:e2e:open": "npm run build && cypress open --browser chrome",
+    "test:e2e:open": "npm run build && cypress open --browser chromium",
     "test:unit": "vitest",
     "test": "npm run test:unit && npm run test:e2e"
   },
