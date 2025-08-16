@@ -50,16 +50,19 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Install Chromium via snap
-      run: |
-        sudo snap install chromium
+    - name: Install Chrome for Testing
+      uses: browser-actions/setup-chrome@v2
+      with:
+        chrome-version: 136
         
     - name: Run E2E tests with Chromium
       run: |
+        echo "Chrome version:"
+        google-chrome-stable --version
         echo "Chromium version:"
-        /snap/bin/chromium --version
+        chromium --version
         echo "Using Chromium (not Chrome for Testing)"
-        npx cypress run --browser /snap/bin/chromium --config chromeWebSecurity=false
+        npm run test:e2e
       
     - name: Upload build artifacts
       if: success()
