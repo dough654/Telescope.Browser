@@ -63,7 +63,7 @@ jobs:
         echo "Chromium version:"
         chromium --version
         echo "Using Chromium (not Chrome for Testing)"
-        cypress run --browser ${{ steps.setup-chrome.outputs.chrome-path }} --config chromeWebSecurity=false
+        npx cypress run --browser ${{ steps.setup-chrome.outputs.chrome-path }} --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
