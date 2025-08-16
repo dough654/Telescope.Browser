@@ -50,11 +50,11 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Setup Chrome 138
+    - name: Setup Chrome 138.0.7204.157
       id: setup-chrome
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: '138'
+        chrome-version: '138.0.7204.157'
         
     - name: Run E2E tests with Chrome 138
       run: |
