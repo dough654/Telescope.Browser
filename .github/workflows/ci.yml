@@ -50,18 +50,16 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Setup Chrome 138.0.7204.157
-      id: setup-chrome
-      uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: '138.0.7204.157'
-        
-    - name: Run E2E tests with Chrome 138
+    - name: Install Chromium via snap
       run: |
-        echo "Chrome 138 path: ${{ steps.setup-chrome.outputs.chrome-path }}"
-        echo "Chrome 138 version: ${{ steps.setup-chrome.outputs.chrome-version }}"
-        echo "Using Chrome 138 (last version supporting --load-extension)"
-        npx cypress run --browser "${{ steps.setup-chrome.outputs.chrome-path }}" --config chromeWebSecurity=false
+        sudo snap install chromium
+        
+    - name: Run E2E tests with Chromium
+      run: |
+        echo "Chromium version:"
+        /snap/bin/chromium --version
+        echo "Using Chromium (not Chrome for Testing)"
+        npx cypress run --browser /snap/bin/chromium --config chromeWebSecurity=false
       
     - name: Upload build artifacts
       if: success()
