@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "scripts": {
     "build": "tsc --noEmit && node ./esbuild.js",
-    "postbuild": "cp -r src/public dist/ && cp manifest.json dist/",
+    "postbuild": "cp -r src/public dist/ && cp manifest.json dist/ && cp src/popup/popup.html dist/popup/ && cp src/popup/popup.css dist/popup/",
     "build:firefox": "npm run build && cp manifest.firefix.json dist/manifest.json",
     "build:store": "npm run build && node scripts/build-store.js",
     "build:watch": "npx concurrently -c \"green,blue\" -n \"tsc,esbuild\" \"tsc --noEmit --watch --preserveWatchOutput\" \"node ./esbuild.js --watch\"",

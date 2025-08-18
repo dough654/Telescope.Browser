@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- User settings popup with site exclusion functionality
+- Pattern matching for site exclusions (wildcards, ports, paths)
+- Current site toggle in settings popup
+- Settings persistence across browser sessions
+
+### Changed  
+
+### Fixed
+
 ## [1.0.1] - 2025-08-06
 
 ### Added

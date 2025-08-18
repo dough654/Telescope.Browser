@@ -11,6 +11,7 @@ import { screenshotManager } from './managers/screenshot-manager.js'
 import { harpoonManager } from './managers/harpoon-manager.js'
 import { bufferManager } from './managers/buffer-manager.js'
 import { recoveryManager } from './managers/recovery-manager.js'
+import { SettingsManager } from './managers/settings-manager.js'
 
 /**
  * New service worker with modular architecture
@@ -19,10 +20,14 @@ import { recoveryManager } from './managers/recovery-manager.js'
 class TelescopeServiceWorker {
   private initialized = false
   private initializationPromise: Promise<void> | null = null
+  private settingsManager: SettingsManager
 
   constructor() {
     // Configure logging first
     configureLogs()
+    
+    // Initialize settings manager
+    this.settingsManager = new SettingsManager()
 
     // Setup extension lifecycle handlers
     this.setupLifecycleHandlers()
@@ -185,6 +190,13 @@ class TelescopeServiceWorker {
 
       case 'getTabScreenshotUrl':
         return this.handleGetTabScreenshotUrl(sender)
+      
+      // Settings-related messages
+      case 'getExcludedSites':
+      case 'addExcludedSite':
+      case 'removeExcludedSite':
+      case 'isUrlExcluded':
+        return this.settingsManager.handleMessage(request, sender)
 
       case 'modalStateChanged':
         return this.handleModalStateChanged(request, sender)

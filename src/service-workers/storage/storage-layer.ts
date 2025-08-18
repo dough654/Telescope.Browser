@@ -1,7 +1,7 @@
 import { serviceWorkerLogger } from '../../utils/logger.js'
 import type { Tab } from '../../types/shared.js'
 
-export type StorageKey = 'tabHistory' | 'harpoonHistory' | 'harpoonWindows' | 'tabsScreenshotMap' | 'windowStates' | 'systemHealth'
+export type StorageKey = 'tabHistory' | 'harpoonHistory' | 'harpoonWindows' | 'tabsScreenshotMap' | 'windowStates' | 'systemHealth' | 'excludedSites'
 
 export interface WindowState {
   id: number
@@ -133,6 +133,9 @@ export class SimpleStorage {
       
       case 'systemHealth':
         return this.validateSystemHealth(value)
+      
+      case 'excludedSites':
+        return Array.isArray(value) && value.every(site => typeof site === 'string')
       
       default:
         return false

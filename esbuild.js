@@ -3,7 +3,11 @@ import sveltePlugin from 'esbuild-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 
 const esbuildConfig = {
-  entryPoints: ['src/content-scripts/content.ts', 'src/service-workers/service-worker.ts'], // Your main content script
+  entryPoints: [
+    'src/content-scripts/content.ts', 
+    'src/service-workers/service-worker.ts',
+    'src/popup/popup.ts'
+  ],
   bundle: true, // Bundle all dependencies
   outdir: 'dist',
   target: 'es2020', // Match your TS target
