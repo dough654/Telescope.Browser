@@ -50,13 +50,18 @@ jobs:
     - name: Run unit tests
       run: npm run test:unit
       
-    - name: Install Chrome for E2E tests
+    - name: Setup Chromium
+      id: setup-chrome
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: '138'
+        chrome-version: latest  # This installs Chromium snapshot, not Chrome
         
     - name: Run E2E tests
-      run: npm run test:e2e
+      run: |
+        echo "Chromium path: ${{ steps.setup-chrome.outputs.chrome-path }}"
+        echo "Chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}"
+        echo "Running tests with Chromium"
+        npm run test:e2e
       
     - name: Upload build artifacts
       if: success()

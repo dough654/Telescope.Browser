@@ -6,8 +6,12 @@ export default defineConfig({
     setupNodeEvents(on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) {
       // Configure Chrome to load the extension
       on('before:browser:launch', (browser, launchOptions) => {
-        if (browser.name === 'chrome') {
+        // Support Chrome, Chromium, and custom Chrome builds
+        if (browser.family === 'chromium' || browser.name === 'chrome' || browser.displayName?.includes('Chrome')) {
           const extensionPath = path.resolve('./dist')
+          
+          console.log(`Loading extension for browser: ${browser.displayName || browser.name}`)
+          console.log(`Extension path: ${extensionPath}`)
           
           launchOptions.args.push(`--load-extension=${extensionPath}`)
           launchOptions.args.push(`--disable-extensions-except=${extensionPath}`)
