@@ -36,42 +36,43 @@ async function checkIfSiteExcluded(): Promise<boolean> {
 
 function cleanupExtension() {
   if (!isInitialized) return
-  
+
   contentLogger.info('Cleaning up Telescope extension due to site exclusion')
-  
+
   // Close modal if open
   if (get(isModalOpen)) {
     closeModal()
   }
-  
+
   // Remove shadow host
   const shadowHost = document.getElementById('telescope-shadow-host')
   if (shadowHost) {
     shadowHost.remove()
   }
-  
+
   // Clean up keyboard handler
   cleanupKeyboardHandler()
-  
+
   // Run cleanup functions
-  cleanupFunctions.forEach(cleanup => cleanup())
+  cleanupFunctions.forEach((cleanup) => cleanup())
   cleanupFunctions = []
-  
+
   // Destroy svelte app
   if (modalApp) {
     modalApp.$destroy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     modalApp = null as any
   }
-  
+
   isInitialized = false
 }
 
 function initializeTelescopeExtension() {
   if (isInitialized) return
   isInitialized = true
-  
+
   contentLogger.info('Initializing Telescope extension')
-  
+
   // Create shadow DOM container
   const shadowHost = document.createElement('div')
   shadowHost.id = 'telescope-shadow-host'
@@ -236,7 +237,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.message === 'settingsChanged' && request.type === 'excludedSites') {
     // Settings changed, check if we should clean up or re-enable
-    checkIfSiteExcluded().then(isExcluded => {
+    checkIfSiteExcluded().then((isExcluded) => {
       if (isExcluded) {
         cleanupExtension()
       } else if (!isInitialized) {
@@ -258,12 +259,12 @@ setupKeyboardHandler()
 // Initialize the extension - check exclusion asynchronously
 async function initializeIfNotExcluded() {
   const isExcluded = await checkIfSiteExcluded()
-  
+
   if (isExcluded) {
     contentLogger.info('Site is excluded, not initializing Telescope extension')
     return
   }
-  
+
   initializeTelescopeExtension()
 }
 
