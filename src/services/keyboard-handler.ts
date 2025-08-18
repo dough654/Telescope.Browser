@@ -79,8 +79,18 @@ function isSearchBarFocused(): boolean {
   return false
 }
 
+let keyboardHandlerActive = false
+
 export function setupKeyboardHandler() {
+  if (keyboardHandlerActive) return
   window.addEventListener('keydown', handleKeydown, { capture: true, passive: false })
+  keyboardHandlerActive = true
+}
+
+export function cleanupKeyboardHandler() {
+  if (!keyboardHandlerActive) return
+  window.removeEventListener('keydown', handleKeydown, { capture: true })
+  keyboardHandlerActive = false
 }
 
 function handleKeydown(event: KeyboardEvent) {

@@ -1,5 +1,5 @@
 import Modal from '../components/Modal.svelte'
-import { setupKeyboardHandler } from '../services/keyboard-handler.js'
+import { setupKeyboardHandler, cleanupKeyboardHandler } from '../services/keyboard-handler.js'
 import { openModal, isModalOpen, closeModal } from '../stores/modal.js'
 import { get } from 'svelte/store'
 import { updateAllTabs, updateHarpoonTabs } from '../stores/tabs.js'
@@ -18,8 +18,60 @@ hideLoading()
 
 let modalApp: Modal
 let extensionNavigating = false // Flag to track extension-initiated navigation
+let isInitialized = false
+let cleanupFunctions: (() => void)[] = []
+
+async function checkIfSiteExcluded(): Promise<boolean> {
+  try {
+    const response = await chrome.runtime.sendMessage({
+      message: 'isUrlExcluded',
+      url: window.location.href
+    })
+    return response?.isExcluded || false
+  } catch (error) {
+    contentLogger.error('Failed to check if site is excluded:', error)
+    return false
+  }
+}
+
+function cleanupExtension() {
+  if (!isInitialized) return
+  
+  contentLogger.info('Cleaning up Telescope extension due to site exclusion')
+  
+  // Close modal if open
+  if (get(isModalOpen)) {
+    closeModal()
+  }
+  
+  // Remove shadow host
+  const shadowHost = document.getElementById('telescope-shadow-host')
+  if (shadowHost) {
+    shadowHost.remove()
+  }
+  
+  // Clean up keyboard handler
+  cleanupKeyboardHandler()
+  
+  // Run cleanup functions
+  cleanupFunctions.forEach(cleanup => cleanup())
+  cleanupFunctions = []
+  
+  // Destroy svelte app
+  if (modalApp) {
+    modalApp.$destroy()
+    modalApp = null as any
+  }
+  
+  isInitialized = false
+}
 
 function initializeTelescopeExtension() {
+  if (isInitialized) return
+  isInitialized = true
+  
+  contentLogger.info('Initializing Telescope extension')
+  
   // Create shadow DOM container
   const shadowHost = document.createElement('div')
   shadowHost.id = 'telescope-shadow-host'
@@ -182,21 +234,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ success: true })
   }
 
+  if (request.message === 'settingsChanged' && request.type === 'excludedSites') {
+    // Settings changed, check if we should clean up or re-enable
+    checkIfSiteExcluded().then(isExcluded => {
+      if (isExcluded) {
+        cleanupExtension()
+      } else if (!isInitialized) {
+        // Site was excluded but now isn't - re-enable everything
+        setupKeyboardHandler() // Ensure keyboard handler is active
+        initializeTelescopeExtension()
+      }
+    })
+    sendResponse({ success: true })
+  }
+
   // Return true to indicate we will send a response asynchronously
   return true
 })
 
-// Initialize the extension - if DOM is already loaded, run immediately
-// Otherwise wait for DOMContentLoaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeTelescopeExtension)
-} else {
-  // DOM is already loaded, initialize immediately
+// Setup keyboard event handling IMMEDIATELY to ensure priority over other extensions
+setupKeyboardHandler()
+
+// Initialize the extension - check exclusion asynchronously
+async function initializeIfNotExcluded() {
+  const isExcluded = await checkIfSiteExcluded()
+  
+  if (isExcluded) {
+    contentLogger.info('Site is excluded, not initializing Telescope extension')
+    return
+  }
+  
   initializeTelescopeExtension()
 }
 
-// Setup keyboard event handling
-setupKeyboardHandler()
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeIfNotExcluded)
+} else {
+  // DOM is already loaded, initialize immediately
+  initializeIfNotExcluded()
+}
 
 // Auto-close modal on manual tab navigation
 document.addEventListener('visibilitychange', () => {
