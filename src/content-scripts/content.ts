@@ -19,7 +19,6 @@ hideLoading()
 let modalApp: Modal
 let extensionNavigating = false // Flag to track extension-initiated navigation
 let isInitialized = false
-let cleanupFunctions: (() => void)[] = []
 
 async function checkIfSiteExcluded(): Promise<boolean> {
   try {
@@ -52,10 +51,6 @@ function cleanupExtension() {
 
   // Clean up keyboard handler
   cleanupKeyboardHandler()
-
-  // Run cleanup functions
-  cleanupFunctions.forEach((cleanup) => cleanup())
-  cleanupFunctions = []
 
   // Destroy svelte app
   if (modalApp) {
@@ -172,7 +167,6 @@ function initializeTelescopeExtension() {
         isOpen: isOpen
       })
       .catch((error) => {
-        // Ignore errors - service worker might not be ready
         // Ignore errors - service worker might not be ready
       })
   })
