@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Telescope.browser",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Lightning-fast fuzzy tab search with vim-style navigation. Inspired by popular neovim plugins Telescope and Harpoon.",
   "homepage_url": "https://github.com/dough654/Telescope.Browser",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxPBdYIJ4EtcEqHbW28vUKjISy28WPdPclsA2Y7qEm4dW9knZqQwgBi/NrcoyEZ0vqwKDOsX5SVLoUL8m5c/0S/uWTHW3HOP8FbxCj915JRSsR3lw9V1MR6KYYgPstAaphoILykxC1raqgF4TqlxPz5p0hAfmroj1ePjWNBK2Zvd2A3Id2lxVAb4uM6sM58oSYdbVyEQGSuRwEHW4DdC4ls07vmv4TWqftbGPAvOs/kgMbyiONl2IMwfmGjiry1gvvgNnzvpGE+8Y4/OvEWDILhJ6hl1AmVacfK3WRKrvmYzzyf9jg+O1pdg+wsHJyPiGcMipDo+LeOR6aoYeQNNYtQIDAQAB",
